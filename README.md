@@ -1,6 +1,6 @@
 # cortex-api
 
-[![CI](https://github.com/akhildwibhashyam/cortex-api/actions/workflows/ci.yml/badge.svg)](https://github.com/akhildwibhashyam/cortex-api/actions/workflows/ci.yml)
+[![CI](https://github.com/adwibha/cortex-api/actions/workflows/ci.yml/badge.svg)](https://github.com/adwibha/cortex-api/actions/workflows/ci.yml)
 
 **An AI workflow platform built with FastAPI.** Demonstrates production-grade backend architecture: async I/O throughout, JWT auth with refresh-token revocation and RBAC, per-path rate limiting with account lockout, Redis pub/sub event bus, LangGraph-style agent orchestration, pgvector semantic search, idempotency keys, background job processing, OpenTelemetry tracing, and Prometheus metrics — all running free and locally via Docker Compose.
 
@@ -32,6 +32,7 @@ Every design decision in this codebase reflects a specific production concern: s
 ## Architecture Overview
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 flowchart TD
     Client(["HTTP Clients"])
 
@@ -102,6 +103,7 @@ cortex-api is a single FastAPI process backed by three external dependencies —
 Every request passes through a deterministic middleware stack before reaching a route handler. The layers are not arbitrary — each sits exactly where it must to be effective.
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -182,6 +184,7 @@ The security design follows a **defence-in-depth** philosophy: no single mechani
 ## Auth Flow
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -248,6 +251,7 @@ sequenceDiagram
 The four AI capabilities in cortex-api deliberately use different integration patterns to demonstrate the range of approaches available when embedding an LLM in a backend system.
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 flowchart TD
     subgraph NL["Natural Language Search"]
         NL1["POST /tasks/search/natural-language"]
@@ -304,6 +308,7 @@ flowchart TD
 `POST /agents/plan-execution` runs a four-stage pipeline where each stage calls the local LLM. The pattern mirrors production agent frameworks (LangGraph, AutoGPT) but without a framework dependency, keeping the control flow explicit and transparent.
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -354,6 +359,7 @@ Each stage is a pure async function with a single well-defined input and output 
 ## Database Schema
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 erDiagram
     users {
         uuid   id      PK
@@ -396,6 +402,7 @@ Three schema decisions are worth explaining.
 All mutations publish to a Redis pub/sub bus. Subscribers are decoupled — adding notifications, webhooks, or metric counters requires zero changes to route handlers.
 
 ```mermaid
+%%{init: {'theme': 'neutral'}}%%
 sequenceDiagram
     participant R as Route Handler
     participant B as Redis Pub/Sub Bus
@@ -434,7 +441,7 @@ There is one deliberate trade-off: Redis pub/sub is fire-and-forget. If the Redi
 ### First-time setup
 
 ```bash
-git clone https://github.com/akhildwibhashyam/cortex-api
+git clone https://github.com/adwibha/cortex-api
 cd cortex-api
 
 # Copy the example env and fill in required secrets
