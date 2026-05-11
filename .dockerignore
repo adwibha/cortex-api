@@ -1,0 +1,42 @@
+# Version control
+.git
+.gitignore
+
+# Python virtual environments
+.venv
+venv
+env
+
+# Python cache
+__pycache__
+*.py[cod]
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Test artifacts
+*.db
+*.sqlite
+*.sqlite3
+htmlcov
+.coverage
+
+# Local config
+.env
+.env.local
+
+# Editor / OS
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+
+# Docs (not needed in image)
+docs/
+*.md
+upgrade.md
+
+# CI / task files
+tasks/
