@@ -28,13 +28,15 @@ Every design decision in this codebase reflects a specific production concern: s
 14. [Observability](#observability)
 15. [Running Tests](#running-tests)
 16. [Project Structure](#project-structure)
+17. [Conclusion](#conclusion)
+18. [License](#license)
 
 ---
 
 ## Architecture Overview
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1e40af', 'lineColor': '#94a3b8', 'clusterBkg': '#1e293b', 'clusterBorder': '#475569', 'titleColor': '#f1f5f9', 'edgeLabelBackground': '#334155'}}}%%
 flowchart TD
     Client(["HTTP Clients"])
 
@@ -58,6 +60,20 @@ flowchart TD
     RD -->|"job queue"| WK
     WK -->|"async SQLAlchemy"| PG
     WK -->|"httpx.AsyncClient"| OL
+
+    classDef client  fill:#7c3aed,stroke:#5b21b6,color:#fff
+    classDef apinode fill:#2563eb,stroke:#1e40af,color:#fff
+    classDef db      fill:#059669,stroke:#065f46,color:#fff
+    classDef cache   fill:#dc2626,stroke:#991b1b,color:#fff
+    classDef llm     fill:#d97706,stroke:#92400e,color:#fff
+    classDef worker  fill:#0891b2,stroke:#0e7490,color:#fff
+
+    class Client client
+    class MW,RT,OT apinode
+    class PG db
+    class RD cache
+    class OL llm
+    class WK worker
 ```
 
 cortex-api is a single FastAPI process backed by three external dependencies — PostgreSQL, Redis, and Ollama — each chosen to serve multiple roles simultaneously, minimising the total surface area of the stack.
@@ -105,7 +121,7 @@ cortex-api is a single FastAPI process backed by three external dependencies —
 Every request passes through a deterministic middleware stack before reaching a route handler. The layers are not arbitrary — each sits exactly where it must to be effective.
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#2563eb', 'actorBorder': '#1e40af', 'actorTextColor': '#ffffff', 'actorLineColor': '#93c5fd', 'signalColor': '#1e40af', 'signalTextColor': '#1e3a8a', 'noteBkgColor': '#fef3c7', 'noteBorderColor': '#f59e0b', 'noteTextColor': '#78350f', 'activationBkgColor': '#bfdbfe', 'activationBorderColor': '#2563eb', 'sequenceNumberColor': '#ffffff'}}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -186,7 +202,7 @@ The security design follows a **defence-in-depth** philosophy: no single mechani
 ## Auth Flow
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#059669', 'actorBorder': '#065f46', 'actorTextColor': '#ffffff', 'actorLineColor': '#6ee7b7', 'signalColor': '#059669', 'signalTextColor': '#064e3b', 'noteBkgColor': '#fef3c7', 'noteBorderColor': '#f59e0b', 'noteTextColor': '#78350f', 'activationBkgColor': '#a7f3d0', 'activationBorderColor': '#059669', 'sequenceNumberColor': '#ffffff'}}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -253,7 +269,7 @@ sequenceDiagram
 The four AI capabilities in cortex-api deliberately use different integration patterns to demonstrate the range of approaches available when embedding an LLM in a backend system.
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1e40af', 'lineColor': '#94a3b8', 'clusterBkg': '#1e293b', 'clusterBorder': '#475569', 'titleColor': '#f1f5f9', 'edgeLabelBackground': '#334155'}}}%%
 flowchart TD
     subgraph NL["Natural Language Search"]
         NL1["POST /tasks/search/natural-language"]
@@ -293,6 +309,16 @@ flowchart TD
     NL ~~~ SEM
     SEM ~~~ SUM
     SUM ~~~ STR
+
+    classDef nl  fill:#2563eb,stroke:#1e40af,color:#fff
+    classDef sem fill:#059669,stroke:#065f46,color:#fff
+    classDef sum fill:#d97706,stroke:#92400e,color:#fff
+    classDef str fill:#7c3aed,stroke:#5b21b6,color:#fff
+
+    class NL1,NL2,NL3,NL4 nl
+    class S1,S2,S3,S4,S5 sem
+    class P1,P2,P3,P4,P5 sum
+    class ST1,ST2,ST3,ST4 str
 ```
 
 **Natural language search** uses the LLM as a *parser*, not a reasoner. The prompt instructs the model to convert free-text input into a strictly defined JSON filter object (`{ "completed": false, "priority_gte": 3 }`). SQL is then constructed *deterministically* from that validated filter using SQLAlchemy's query builder. The LLM never touches the database directly and cannot influence query structure — only filter values — making SQL injection structurally impossible regardless of what the model produces.
@@ -310,7 +336,7 @@ flowchart TD
 `POST /agents/plan-execution` runs a four-stage pipeline where each stage calls the local LLM. The pattern mirrors production agent frameworks (LangGraph, AutoGPT) but without a framework dependency, keeping the control flow explicit and transparent.
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#7c3aed', 'actorBorder': '#5b21b6', 'actorTextColor': '#ffffff', 'actorLineColor': '#c4b5fd', 'signalColor': '#6d28d9', 'signalTextColor': '#4c1d95', 'noteBkgColor': '#e0f2fe', 'noteBorderColor': '#0891b2', 'noteTextColor': '#0c4a6e', 'activationBkgColor': '#ede9fe', 'activationBorderColor': '#7c3aed', 'sequenceNumberColor': '#ffffff'}}}%%
 sequenceDiagram
     autonumber
     participant C as Client
@@ -361,7 +387,7 @@ Each stage is a pure async function with a single well-defined input and output 
 ## Database Schema
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1e40af', 'lineColor': '#64748b', 'fillType0': '#2563eb', 'fillType1': '#059669', 'fillType2': '#d97706', 'fillType3': '#7c3aed', 'attributeBackgroundColorEven': '#f8fafc', 'attributeBackgroundColorOdd': '#f1f5f9'}}}%%
 erDiagram
     users {
         uuid   id      PK
@@ -404,7 +430,7 @@ Three schema decisions are worth explaining.
 All mutations publish to a Redis pub/sub bus. Subscribers are decoupled — adding notifications, webhooks, or metric counters requires zero changes to route handlers.
 
 ```mermaid
-%%{init: {'theme': 'neutral'}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'actorBkg': '#b45309', 'actorBorder': '#92400e', 'actorTextColor': '#ffffff', 'actorLineColor': '#fcd34d', 'signalColor': '#d97706', 'signalTextColor': '#78350f', 'noteBkgColor': '#e0f2fe', 'noteBorderColor': '#0891b2', 'noteTextColor': '#0c4a6e', 'activationBkgColor': '#fef3c7', 'activationBorderColor': '#d97706', 'sequenceNumberColor': '#ffffff'}}}%%
 sequenceDiagram
     participant R as Route Handler
     participant B as Redis Pub/Sub Bus
@@ -782,3 +808,41 @@ docker-compose.yml      # Full local stack (requires .env)
 Dockerfile              # Multi-stage build, non-root user, HEALTHCHECK
 .github/workflows/ci.yml
 ```
+
+---
+
+## Conclusion
+
+### What this project genuinely demonstrates
+
+This codebase covers a meaningful slice of what senior backend engineers actually work on: async I/O correctness, layered security, observable infrastructure, and integrating AI into a request lifecycle without making a mess. The patterns here — dual-token auth, per-path idempotency, pgvector semantic search, event-driven audit logging, streaming responses — are not contrived. They map directly to problems that appear in production systems.
+
+The Docker Compose stack is fully self-contained and reproducible. Anyone can clone the repo, copy `.env.example`, and have the entire platform running locally in under five minutes with no external accounts, no API keys, and no cloud bills.
+
+### Honest limitations
+
+**This is not a production system.** It has never served real traffic. The test suite covers the happy path and common error cases, but production hardening requires operational experience that no portfolio project can substitute — load testing, chaos engineering, on-call incident response, schema migrations under live traffic.
+
+**The AI quality ceiling is low.** `llama3.2:1b` is a 1-billion-parameter model. It produces coherent output for simple tasks but will fail on anything requiring nuanced reasoning or long context. The architecture is production-equivalent; the model is not. Swapping to a frontier model is a two-line config change and the rest of the code works identically — which is the actual engineering point being made.
+
+**Async does not mean fast.** Async I/O eliminates blocking waits and improves concurrency under I/O-bound load. It does not improve CPU-bound performance, and it does not substitute for query optimisation, caching strategy, or proper indexing. The pgvector index, Redis caching, and connection pooling here are real contributions to performance, but they have never been measured under realistic concurrency.
+
+**Redis pub/sub is fire-and-forget.** If the subscriber process is down when an event is published, that event is lost. For audit logging this is an acceptable trade-off; for financial or compliance-critical events it is not. A durable queue (Kafka, SQS, RabbitMQ) would be required in those contexts. The architecture is designed to make that substitution straightforward — only `bus.py` changes.
+
+### What this demonstrates to an interviewer
+
+If you can walk through the auth flow, explain why the JTI revocation store uses Redis instead of Postgres, describe the trade-off in the idempotency key scope, and reason about what happens when the event subscriber crashes — that is a 45-minute technical conversation at the senior engineer level. The codebase exists to make that conversation grounded rather than hypothetical.
+
+---
+
+## License
+
+MIT License
+
+Copyright (c) 2026 Akhil Dwibhashyam
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
