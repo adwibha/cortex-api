@@ -2,6 +2,23 @@
 
 [![CI](https://github.com/adwibha/cortex-api/actions/workflows/ci.yml/badge.svg)](https://github.com/adwibha/cortex-api/actions/workflows/ci.yml)
 
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![pgvector](https://img.shields.io/badge/pgvector-0.3.6-4169E1?logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?logo=sqlalchemy&logoColor=white)
+![Alembic](https://img.shields.io/badge/Alembic-1.14-6BA81E?logoColor=white)
+![Pydantic](https://img.shields.io/badge/Pydantic-v2-E92063?logo=pydantic&logoColor=white)
+![ARQ](https://img.shields.io/badge/ARQ-0.26-FF4154?logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-local%20LLM-000000?logo=ollama&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-HS256-000000?logo=jsonwebtokens&logoColor=white)
+![bcrypt](https://img.shields.io/badge/bcrypt-5.0-338477?logoColor=white)
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-1.29-425CC7?logo=opentelemetry&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-metrics-E6522C?logo=prometheus&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![pytest](https://img.shields.io/badge/pytest-8.3-0A9EDC?logo=pytest&logoColor=white)
+
 **An AI workflow platform built with FastAPI.** Demonstrates production-grade backend architecture: async I/O throughout, JWT auth with refresh-token revocation and RBAC, per-path rate limiting with account lockout, Redis pub/sub event bus, LangGraph-style agent orchestration, pgvector semantic search, idempotency keys, background job processing, OpenTelemetry tracing, and Prometheus metrics — all running free and locally via Docker Compose.
 
 Every design decision in this codebase reflects a specific production concern: security, reliability, observability, or cost. This document explains the *what*, the *why*, and the *how* of each subsystem from first principles.
