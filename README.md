@@ -387,7 +387,7 @@ Each stage is a pure async function with a single well-defined input and output 
 ## Database Schema
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#2563eb', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1e40af', 'lineColor': '#64748b', 'fillType0': '#2563eb', 'fillType1': '#059669', 'fillType2': '#d97706', 'fillType3': '#7c3aed', 'attributeBackgroundColorEven': '#f8fafc', 'attributeBackgroundColorOdd': '#f1f5f9'}}}%%
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#1e40af', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#1e3a8a', 'lineColor': '#94a3b8', 'fillType0': '#1e40af', 'fillType1': '#065f46', 'fillType2': '#92400e', 'fillType3': '#4c1d95', 'attributeBackgroundColorEven': '#1e293b', 'attributeBackgroundColorOdd': '#263248'}}}%%
 erDiagram
     users {
         uuid   id      PK
